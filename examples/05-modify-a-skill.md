@@ -2,7 +2,7 @@
 
 A **skill** (`.claude/skills/<name>/SKILL.md`) is a procedure the agent follows, run as `/<name>`. Changing one changes how the agent behaves, so it is governed like code: a reason, a test before and after, and a review gate.
 
-**See the real diff:** `git diff main..example/modify-session-end-skill`
+**See the real diff:** `git log -p -1 --grep='session-end skill archives'` (the commit that made this change)
 
 ## Why change it
 
