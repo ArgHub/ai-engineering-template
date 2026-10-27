@@ -2,7 +2,7 @@
 
 Append-only. An accepted ADR is never rewritten: to change a decision, add a new ADR that supersedes it and mark the old one "Superseded by ADR-00X". A **Proposed** ADR can still be edited.
 
-ADR-001 to ADR-005 apply to any project using this template. ADR-006 onwards are about the sample app; delete them when you adopt the template.
+ADRs marked "Scope: project" apply to any project using this template. ADRs marked "Scope: sample app" are about the sample; delete them when you adopt the template.
 
 ## Template
 
@@ -90,3 +90,12 @@ Scope: sample app
 Context: The sample needs unit tests and in-memory API tests. A third-party HTTP-mocking library was considered (examples/04-new-dependency.md).
 Decision: Use xUnit with its runner and `Microsoft.NET.Test.Sdk`, and the first-party `Microsoft.AspNetCore.Mvc.Testing` to run the real API in memory. No mocking library.
 Consequences: Tests exercise real routing, authentication and serialisation. Four test-only packages, listed in `docs/dependencies.md`.
+
+## ADR-009: The session-end skill archives STATUS.md and checks drift
+Status: Proposed (accept after a full agent run of evals/04 passes)
+Date: 27/10/2026
+Scope: project
+
+Context: STATUS.md is read at the start of every session, so it grows with every Completed item. Past 20 KB it crowds the agent's context and `scripts/doc-drift.sh` fails in CI. Version 1 of `/session-end` updated STATUS.md but never shrank it or checked for drift, so the problem only showed up in CI, after the session had ended.
+Decision: `/session-end` first runs `scripts/archive-status.sh`, which moves all but the newest five Completed items to `.claude/archive/STATUS-archive.md` when STATUS.md is over 20 KB, and then `scripts/doc-drift.sh`, before running the checks. Archiving is a script, not prose, so it is tested (`scripts/tests/test-archive-status.sh`). The script takes no arguments, touches only `.claude/`, refuses symlinks and invalid settings, and replaces files only after checking that nothing was lost; the allow rule permits only the no-argument form.
+Consequences: STATUS.md stays readable every session and nothing is deleted. Old Completed items are one file away. Changing the skill again follows the same path: ADR or STATUS note, eval before and after, security review (skills are gated).

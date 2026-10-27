@@ -51,7 +51,7 @@ The idea in one line: **we don't just write rules for the AI; we design a system
 ├── docs/           DECISIONS · architecture · dependencies · stack · security-review/ · modules/ · runbooks/
 ├── examples/       01 result pattern · 02 strategy · 03 security review · 04 new dependency
 ├── evals/          planted-bug cases for the reviewers
-├── scripts/        doc-drift.sh · review-check.sh · tests/
+├── scripts/        doc-drift.sh · review-check.sh · archive-status.sh · tests/
 ├── samples/csharp/ BookingApi + tests (delete when adopting)
 └── .github/workflows/  governance.yml · csharp-sample.yml
 ```
@@ -62,7 +62,7 @@ The idea in one line: **we don't just write rules for the AI; we design a system
 2. Find every place to adapt: `grep -rn "ADAPT" --include='*.md' .`
 3. Fill in `docs/stack.md` for your language and update `.claude/settings.json` allow rules to match.
 4. Write your threat model in `.claude/agents/security-reviewer.md` and your gated paths in the CLAUDE.md gate table.
-5. Delete `samples/`, the sample ADRs (ADR-006 onwards) and the sample rows in the docs. Keep ADR-001 to ADR-005.
+5. Delete `samples/`, the ADRs marked "Scope: sample app" and the sample rows in the docs. Keep the "Scope: project" ADRs.
 6. Run `scripts/tests/run.sh` and `scripts/doc-drift.sh`.
 7. On GitHub, protect `main` and require the CI checks.
 

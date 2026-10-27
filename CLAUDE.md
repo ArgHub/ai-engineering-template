@@ -41,10 +41,11 @@ Approved dependencies: `docs/dependencies.md`. Every addition requires an ADR (A
 3. Check `docs/DECISIONS.md` for any ADR touching what you are about to change.
 
 ### Session end or pause
-Run the `/session-end` skill (`.claude/skills/session-end/`). It does the following:
-1. Update `.claude/STATUS.md`: Completed, In progress, Next up, Blockers, and "Last updated".
-2. Add an ADR if an architectural decision was taken.
-3. Run the tests and record the result in STATUS.md.
+Run the `/session-end` skill (`.claude/skills/session-end/`). In short, it:
+1. Archives old Completed items if STATUS.md is over 20 KB, and runs the doc-drift check.
+2. Runs the tests and checks.
+3. Updates `.claude/STATUS.md`: Completed, In progress, Next up, Blockers, "Last updated" and the check results.
+4. Drafts an ADR if an architectural decision was taken.
 
 ### Subagent review gates
 

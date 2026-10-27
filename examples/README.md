@@ -1,6 +1,6 @@
 # Walkthroughs
 
-Four short stories of a change made with an AI agent in this repo. Each shows the agent's first attempt, which files change, what the reviewer says, and the lesson. They all use the sample in `samples/csharp/BookingApi`, so the "after" code is real and tested.
+Short stories of a change made with an AI agent in this repo. Each shows the agent's first attempt, which files change, what the reviewer says, and the lesson. They all use the sample in `samples/csharp/BookingApi`, so the "after" code is real and tested.
 
 | # | Walkthrough | What it shows | Reviewer |
 |---|---|---|---|
@@ -8,6 +8,7 @@ Four short stories of a change made with an AI agent in this repo. Each shows th
 | 02 | [Strategy pattern](02-strategy-pattern.md) | A design choice for one place, not a global rule | code-reviewer |
 | 03 | [Security review](03-security-review.md) | The gate catching a real bug, fixed by construction | security-reviewer |
 | 04 | [New dependency](04-new-dependency.md) | A dependency as a decision with a record | dep-auditor |
+| 05 | [Modify a skill](05-modify-a-skill.md) | Changing the AI's own instructions, governed like code | security-reviewer + eval |
 
 ## Which file holds what
 

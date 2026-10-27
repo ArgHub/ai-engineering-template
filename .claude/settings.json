@@ -12,6 +12,7 @@
       "Bash(git show:*)",
       "Bash(git add:*)",
       "Bash(scripts/doc-drift.sh:*)",
+      "Bash(scripts/archive-status.sh)",
       "Bash(scripts/review-check.sh:*)",
       "Bash(scripts/tests/run.sh:*)"
     ],
