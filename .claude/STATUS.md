@@ -5,6 +5,7 @@ Last updated: 27/10/2026
 <!-- Keep this file short (doc-drift fails above 20 KB). Move old Completed items to .claude/archive/ when it grows. -->
 
 ## Completed
+- `/session-end` skill (v1); skills and agents added to the gate table.
 - Template v0.1: AI structure, C# sample, examples, reviewer evals, hook and doc-drift scripts with tests.
 
 ## In progress

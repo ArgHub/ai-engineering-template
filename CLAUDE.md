@@ -41,6 +41,7 @@ Approved dependencies: `docs/dependencies.md`. Every addition requires an ADR (A
 3. Check `docs/DECISIONS.md` for any ADR touching what you are about to change.
 
 ### Session end or pause
+Run the `/session-end` skill (`.claude/skills/session-end/`). It does the following:
 1. Update `.claude/STATUS.md`: Completed, In progress, Next up, Blockers, and "Last updated".
 2. Add an ADR if an architectural decision was taken.
 3. Run the tests and record the result in STATUS.md.
@@ -56,6 +57,7 @@ Any change touching these paths must receive the listed review before commit, an
 | `samples/csharp/BookingApi/Bookings/BookingRepository.cs` | `security-reviewer` |
 | `samples/csharp/BookingApi/Bookings/BookingEndpoints.cs` | `security-reviewer` |
 | `.claude/settings.json`, `.claude/hooks/**`, `.github/workflows/**` | `security-reviewer` |
+| `.claude/skills/**`, `.claude/agents/**` | `security-reviewer` |
 | `**/Directory.Packages.props`, `**/*.csproj`, `**/packages.lock.json` | `dep-auditor` |
 <!-- gate-table:end -->
 

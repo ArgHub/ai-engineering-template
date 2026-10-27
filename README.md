@@ -38,6 +38,7 @@ The idea in one line: **we don't just write rules for the AI; we design a system
 | `docs/security-review/README.md` | human security reviewers arrive cold too | they read the same files the agent reads |
 | `docs/modules/`, `docs/runbooks/` | detail would bloat the always-loaded rules | detail is read only when needed |
 | `.claude/agents/*.md` | an author can't reliably spot its own mistakes | read-only reviewers check against the threat model and ADRs |
+| `.claude/skills/*/SKILL.md` | repeated procedures drift when each session improvises them | one tested procedure per task (e.g. `/session-end`), reviewed like code |
 | `.claude/settings.json`, `.claude/hooks/` | instructions can be ignored; permissions can't | the agent can't read secrets or push without a human |
 | `.github/workflows/`, `scripts/` | neither agents nor people always run the checks | every push is checked, whoever wrote it |
 | `examples/`, `evals/` | rules are easier to follow with worked cases | four walkthroughs, and planted bugs that test the reviewers |
@@ -46,7 +47,7 @@ The idea in one line: **we don't just write rules for the AI; we design a system
 
 ```
 ├── CLAUDE.md · AGENTS.md · README.md
-├── .claude/        STATUS · PLAN · settings.json · hooks/ · agents/
+├── .claude/        STATUS · PLAN · settings.json · hooks/ · agents/ · skills/
 ├── docs/           DECISIONS · architecture · dependencies · stack · security-review/ · modules/ · runbooks/
 ├── examples/       01 result pattern · 02 strategy · 03 security review · 04 new dependency
 ├── evals/          planted-bug cases for the reviewers
