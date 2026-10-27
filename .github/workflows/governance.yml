@@ -1,0 +1,30 @@
+# Language-neutral checks that keep the AI structure honest.
+name: governance
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Script tests (hook, doc-drift, review-check)
+        run: scripts/tests/run.sh
+
+      - name: Doc drift
+        run: scripts/doc-drift.sh
+
+      - name: Gated reviews recorded
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: scripts/review-check.sh "origin/${{ github.base_ref }}"

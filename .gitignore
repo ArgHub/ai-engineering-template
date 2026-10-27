@@ -1,0 +1,20 @@
+# Build output
+bin/
+obj/
+*.user
+.vs/
+.idea/
+
+# Secrets: never commit. Only *.example files belong in git.
+.env
+.env.*
+!.env.example
+auth.env
+*.pem
+*.key
+secrets/
+
+# Personal Claude settings
+.claude/settings.local.json
+
+.DS_Store
