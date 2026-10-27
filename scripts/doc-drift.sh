@@ -76,6 +76,42 @@ for t in $invariant_tests; do
   esac
 done
 
+# 8. The index at the top of docs/DECISIONS.md has a row for every ADR, with the same title and status (ADR-010).
+# [0-9][0-9][0-9] rather than [0-9]{3}: older mawk builds treat {3} literally and would check nothing.
+adrs=$(awk 'function flush() { if (id != "") print id "\t" title "\t" status; id = "" }
+  { sub(/\r$/, "") }
+  /^## / { flush() }
+  /^## ADR-[0-9][0-9][0-9]: / { id = substr($0, 4, 7); title = substr($0, 13); status = ""; next }
+  id != "" && status == "" && /^Status: / { status = substr($0, 9) }
+  END { flush() }' docs/DECISIONS.md)
+index_rows=$(awk -F'|' '{ sub(/\r$/, "") }
+  /^## / { in_index = ($0 ~ /^## Index *$/) }
+  in_index && /^\| ADR-[0-9][0-9][0-9] / { for (i = 2; i <= 4; i++) gsub(/^ +| +$/, "", $i); print $2 "\t" $3 "\t" $4 }' docs/DECISIONS.md)
+[ -n "$adrs" ] || [ "$adr_count" -eq 0 ] || fail "docs/DECISIONS.md: could not read the ADR headings to check the index"
+while IFS=$'\t' read -r id title status; do
+  [ -n "$id" ] || continue
+  row=$(printf '%s\n' "$index_rows" | awk -F'\t' -v id="$id" '$1 == id')
+  if [ -z "$row" ]; then
+    fail "docs/DECISIONS.md: $id has no row in the index"
+    continue
+  fi
+  [ "$(printf '%s\n' "$row" | wc -l | tr -d ' ')" -eq 1 ] || fail "docs/DECISIONS.md: $id has more than one index row"
+  index_title=$(printf '%s\n' "$row" | head -1 | cut -f2)
+  index_status=$(printf '%s\n' "$row" | head -1 | cut -f3)
+  [ "$index_title" = "$title" ] || fail "docs/DECISIONS.md: index title for $id differs from its heading"
+  if [ -z "$status" ]; then
+    fail "docs/DECISIONS.md: $id has no Status line"
+  elif [ -z "$index_status" ]; then
+    fail "docs/DECISIONS.md: index status for $id is empty"
+  else
+    # The index may shorten "Proposed (accept after ...)" to "Proposed", but must match whole words.
+    case "$status" in
+      "$index_status" | "$index_status "* | "$index_status("*) ;;
+      *) fail "docs/DECISIONS.md: index says $id is '$index_status' but the ADR says 'Status: $status'" ;;
+    esac
+  fi
+done <<< "$adrs"
+
 if [ "$problems" -gt 0 ]; then
   echo "doc-drift: $problems problem(s). Fix the docs or the code so they agree."
   exit 1

@@ -4,6 +4,23 @@ Append-only. An accepted ADR is never rewritten: to change a decision, add a new
 
 ADRs marked "Scope: project" apply to any project using this template. ADRs marked "Scope: sample app" are about the sample; delete them when you adopt the template.
 
+Read the index first, then only the ADRs that touch your change (ADR-010). When you add an ADR or change its status, update its row; `scripts/doc-drift.sh` fails if the index and the ADRs disagree.
+
+## Index
+
+| ADR | Title | Status | Touches |
+|---|---|---|---|
+| ADR-001 | Work with AI agents through a layered structure | Accepted | `CLAUDE.md`, `.claude/`, `docs/` |
+| ADR-002 | Reviewers are read-only | Accepted | `.claude/agents/` |
+| ADR-003 | Decisions are recorded as append-only ADRs | Accepted | `docs/DECISIONS.md` |
+| ADR-004 | Hard rules are enforced by tools, not only by prose | Accepted | `.claude/settings.json`, `.claude/hooks/`, `.github/workflows/`, `scripts/` |
+| ADR-005 | New third-party dependencies need an ADR and dep-auditor approval | Accepted | `docs/dependencies.md`, package files |
+| ADR-006 | Expected failures return `Result<T>` | Accepted | `samples/csharp/BookingApi/` |
+| ADR-007 | Pricing varies by membership tier through strategies | Accepted | `samples/csharp/BookingApi/Pricing/` |
+| ADR-008 | xUnit and Microsoft.AspNetCore.Mvc.Testing for tests | Accepted | `samples/csharp/BookingApi.Tests/`, package files |
+| ADR-009 | The session-end skill archives STATUS.md and checks drift | Proposed | `.claude/skills/session-end/`, `scripts/archive-status.sh` |
+| ADR-010 | ADRs have an index so agents read only the ones they need | Accepted | `docs/DECISIONS.md`, `scripts/doc-drift.sh` |
+
 ## Template
 
 ```
@@ -99,3 +116,12 @@ Scope: project
 Context: STATUS.md is read at the start of every session, so it grows with every Completed item. Past 20 KB it crowds the agent's context and `scripts/doc-drift.sh` fails in CI. Version 1 of `/session-end` updated STATUS.md but never shrank it or checked for drift, so the problem only showed up in CI, after the session had ended.
 Decision: `/session-end` first runs `scripts/archive-status.sh`, which moves all but the newest five Completed items to `.claude/archive/STATUS-archive.md` when STATUS.md is over 20 KB, and then `scripts/doc-drift.sh`, before running the checks. Archiving is a script, not prose, so it is tested (`scripts/tests/test-archive-status.sh`). The script takes no arguments, touches only `.claude/`, refuses symlinks and invalid settings, and replaces files only after checking that nothing was lost; the allow rule permits only the no-argument form.
 Consequences: STATUS.md stays readable every session and nothing is deleted. Old Completed items are one file away. Changing the skill again follows the same path: ADR or STATUS note, eval before and after, security review (skills are gated).
+
+## ADR-010: ADRs have an index so agents read only the ones they need
+Status: Accepted
+Date: 27/10/2026
+Scope: project
+
+Context: Agents check this file before every change, and it only grows (ADR-003). Read in full, it costs more context each month, and a long session pays for it on every call afterwards. In a mature repo it can reach tens of kilobytes.
+Decision: An index at the top lists every ADR with its title, status and the paths it touches. Agents read the index, then only the ADRs that touch their change. `scripts/doc-drift.sh` fails if an ADR has no index row or its title or status disagrees, so the index can't silently go stale.
+Consequences: Smaller reads for agents and a one-screen overview for people. Each new ADR needs an index row. The "Touches" column is a summary: an incomplete one can hide a relevant ADR, so reviewers still check the ADRs for the paths they review, and a status change is made in both places.

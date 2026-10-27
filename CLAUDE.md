@@ -38,7 +38,7 @@ Approved dependencies: `docs/dependencies.md`. Every addition requires an ADR (A
 ### Session start
 1. Read `.claude/STATUS.md`.
 2. Skim `.claude/PLAN.md`, especially non-goals.
-3. Check `docs/DECISIONS.md` for any ADR touching what you are about to change.
+3. Read the index in `docs/DECISIONS.md`, then the ADRs that touch what you are about to change.
 
 ### Session end or pause
 Run the `/session-end` skill (`.claude/skills/session-end/`). In short, it:
